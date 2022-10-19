@@ -1,0 +1,59 @@
+
+-----------------------------VELERO TOOL COMMANDS-------------------------
+
+Create a buck up                                 # velero backup create <name>
+if u dont specify name it will give you random name, it is going to back up your entire cluster. 
+
+Create a back up in a prticular namespace        # velero create backup <name>--wait --include-namespaces <namespace>
+
+u can also include resources                     # velero create backup <name> --include-namespaces <namespace> --include resources pod, demployment etc, etc
+
+u can also exclude resources                     # velero create backup <name> --include-namespaces <namespace> --exclude resources pod, demployment etc, etc
+
+u can also back whole cluster excluding <namespace> # velero backup create <name> --exclude-namespace <namespace>
+ or resources                                    # velero create backup <name> --exclude-resources configmaps etc etc
+
+check the backups                                # kubectl -n velero get backups or # velero backup get
+
+u can edscribe backup                            # velero backup describe <backupname>
+
+to restore                                       #velero restore create <resotrename>--wait  --from-backup <backupname>
+f
+u can describe restore as well                   # velero restore describe <restorename>
+
+u can create a schedule for backup               # velero schedule create <schedulename> --schedule="@every 10m" "@every 1h" "@every 7d" "@every 1w"
+
+create a backup with specified time to live      # velero backup create <backupname> --include-namespaces kube-system --ttl 2h 
+TTL. by defult it is 29 days ot 720hrs.
+
+to see backup location                           # velero backup-location get 
+
+to see listing backups                           # velero backup get
+
+for velero command auto-completion (zsh or bash) # source <(velero completion <zsh,bash>)
+
+to generate secret key                           # kubectl create secret generic --from-file cloud -n velero awscreds
+
+to get credentials in velero namespace           # kubectl -n velero get crds
+
+to see snapshot locations                        # velero get snapshot-locations
+
+to schedule back up                              # velero schedule craete daily --schedule="@every1h" --include-namespace <namespacename> --ttl 24h0m0s
+
+to see available schedules                       # velero get schedules
+
+to remove velero from cluster                    # kubectl delete namespace/velero clusterrolebinding/velero
+--wait
+to see persistent volumes                        # kubectl get persistnetvolumes
+
+to describe backup                               # velero backup describe --details <nameofbackup>
+
+to create a backup every 1h                      # velero create schedule wholecluster --schedule="0 */6 * * *"
+
+to schedule a backup                             # velero create schedule daily --schedule="@every 1h" --include-namespaces <namespace> --ttl 24h0m0s
+
+to schedule a backup                             # velero create schedule daily --shcedule="@every 24h" --snapshot-volumes --include-cluster-resources
+
+to schedule a backup                             # velero schedule create cluster-backup --snapshot-vlomuse --include-cluster-resources
+
+to restore                                       # velero restore create --from-backup cluster-backup-<timestamp> --restore-volumes
